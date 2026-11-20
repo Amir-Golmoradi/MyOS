@@ -5,8 +5,7 @@ let
 in {
   environment.systemPackages = with pkgs; [
     firefox mpv mousepad transmission_4-qt
-    #jetbrains-toolbox 
-    obsidian slack telegram-desktop #discord
+    obsidian slack telegram-desktop
   ] ++ [ backupApp ];
   # No Brave, Bruno, Fresh Editor, Windscribe, or Zulip.
 }
