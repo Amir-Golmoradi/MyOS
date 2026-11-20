@@ -14,6 +14,11 @@
       ".config/fish/functions/lv.fish".source =
         ./dotfiles/fish/functions/lv.fish;
 
+      # OpenVPN management function
+	"home/amirgm/dotfiles/fish/functions/openvpn.fish".source =
+	./dotfiles/fish/functions/openvpn.fish;
+
+
       # NixOS management functions
       ".config/fish/functions/nix-rebuild.fish".source =
         ./dotfiles/fish/functions/nix-rebuild.fish;
