@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# Replace with your actual path from step 1
+THRESH="/sys/class/power_supply/BAT1/charge_control_end_threshold"
+
+PROFILE="$1"
+
+if [[ $EUID -ne 0 ]]; then
+  echo "Run with sudo"
+  exit 1
+fi
+
+if [[ ! -f "$THRESH" ]]; then
+  echo "Charge threshold not supported on this battery interface."
+  exit 1
+fi
+
+case "$PROFILE" in
+
+coding)
+  echo "Activating CODING profile (full charge)..."
+  echo 100 >"$THRESH"
+  ;;
+
+normal)
+  echo "Activating BATTERY HEALTH profile (80% limit)..."
+  echo 80 >"$THRESH"
+  ;;
+
+*)
+  echo "Usage: sudo tlp-profile {coding|normal}"
+  exit 1
+  ;;
+esac
+
+echo "Current threshold: $(cat $THRESH)%"
+echo "Profile applied successfully."

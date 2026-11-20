@@ -1,0 +1,3 @@
+#!/bin/sh
+date >> /tmp/i3-theme-key-test.log
+"$HOME/.local/bin/i3-theme" toggle >> /tmp/i3-theme-key-test.log 2>&1

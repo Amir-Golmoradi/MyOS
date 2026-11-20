@@ -1,0 +1,89 @@
+#!/run/current-system/sw/bin/bash
+# One keyboard shortcut controls each separate component module.
+set -euo pipefail
+
+ROOT="${I3_THEME_ROOT:-$HOME/.config/i3-theme}"
+STATE="$ROOT/current"
+LOCK="$ROOT/.theme-lock"
+MODULES=(i3 polybar gtk dmenu wallpaper firefox)
+
+usage() {
+  printf 'Usage: i3-theme [toggle|mocha|latte|apply|status]\n'
+}
+
+current_theme() {
+  local current='mocha'
+  if [[ -f "$STATE" ]]; then
+    IFS= read -r current <"$STATE" || true
+  fi
+  if [[ "$current" != 'mocha' && "$current" != 'latte' ]]; then
+    current='mocha'
+  fi
+  printf '%s' "$current"
+}
+
+main() {
+  local action="${1:-toggle}" previous selected
+  previous="$(current_theme)"
+  selected="$previous"
+  case "$action" in
+  status)
+    printf '%s\n' "$selected"
+    return 0
+    ;;
+  toggle) if [[ "$selected" == 'mocha' ]]; then selected='latte'; else selected='mocha'; fi ;;
+  mocha | latte) selected="$action" ;;
+  apply) ;;
+  -h | --help | help)
+    usage
+    return 0
+    ;;
+  *)
+    usage >&2
+    return 2
+    ;;
+  esac
+
+  if [[ ! -d "$ROOT/modules" ]]; then
+    echo 'Theme files not installed. Run python3 install.py first.' >&2
+    return 1
+  fi
+  mkdir -p "$ROOT"
+  # GNU flock is part of util-linux on Arch. Prevent overlapping theme transitions.
+  exec 9>"$LOCK"
+  if command -v flock >/dev/null 2>&1; then flock -w 3 9 || {
+    echo "Theme switch is already running or the lock is unavailable." >&2
+    exit 1
+  }; fi
+  printf '%s\n' "$selected" >"$STATE.tmp.$$"
+  mv -f "$STATE.tmp.$$" "$STATE"
+
+  export I3_THEME_ROOT="$ROOT" I3_THEME_NAME="$selected"
+  local errors=0
+  for module in "${MODULES[@]}"; do
+    if [[ -x "$ROOT/modules/$module/apply.sh" ]]; then
+      if "$ROOT/modules/$module/apply.sh"; then
+        printf '[ok] %s\n' "$module"
+      else
+        printf '[warn] %s could not apply (see output above)\n' "$module" >&2
+        errors=$((errors + 1))
+        if [[ "$module" == 'i3' ]]; then
+          # Invalid i3 configuration is a hard stop; do not partially theme apps.
+          printf '%s\n' "$previous" >"$STATE"
+          echo 'Restored previous theme state after failed i3 validation.' >&2
+          return 1
+        fi
+      fi
+    fi
+  done
+
+  if command -v notify-send >/dev/null 2>&1 && [[ -n "${DISPLAY:-}" ]]; then
+    notify-send 'Desktop theme' "Catppuccin ${selected^}" || true
+  fi
+  if ((errors > 0)); then
+    printf '%d module(s) could not apply. See README.md.\n' "$errors" >&2
+    return 1
+  fi
+  printf 'Active theme: %s\n' "$selected"
+}
+main "$@"

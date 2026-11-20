@@ -1,0 +1,40 @@
+name: nixos-dev
+services:
+  postgres:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-devuser}
+      POSTGRES_DB: ${POSTGRES_DB:-devdb}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in an untracked .env file}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pg18-data:/var/lib/postgresql
+
+  redis:
+    image: redis:8
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?Set REDIS_PASSWORD in an untracked .env file}
+    command: ["sh", "-c", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis-data:/data
+
+  vault:
+    image: hashicorp/vault:1.20
+    restart: unless-stopped
+    cap_add: ["IPC_LOCK"]
+    command: ["server", "-config=/vault/config/vault.hcl"]
+    ports:
+      - "127.0.0.1:8200:8200"
+    volumes:
+      - vault-data:/vault/file
+      - ./vault.hcl:/vault/config/vault.hcl:ro
+
+volumes:
+  pg18-data:
+  redis-data:
+  vault-data:

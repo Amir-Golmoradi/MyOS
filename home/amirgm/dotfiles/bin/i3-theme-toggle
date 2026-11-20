@@ -1,0 +1,16 @@
+#!/run/current-system/sw/bin/bash
+set -euo pipefail
+
+THEMES="$HOME/.config/i3/themes"
+CURRENT="$THEMES/current.conf"
+
+if [[ "$(readlink -f "$CURRENT")" == "$THEMES/mocha.conf" ]]; then
+    NEXT="latte"
+else
+    NEXT="mocha"
+fi
+
+ln -sfn "$THEMES/$NEXT.conf" "$CURRENT"
+
+i3-msg reload
+notify-send "i3 Theme" "Switched to Catppuccin $NEXT"

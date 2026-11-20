@@ -1,0 +1,32 @@
+#!/run/current-system/sw/bin/bash
+# Uses real dmenu_run (never Rofi) and preserves the user's patched -c option.
+set -euo pipefail
+STATE="$HOME/.config/i3-theme/current"
+THEME="mocha"
+if [[ -f "$STATE" ]]; then read -r THEME <"$STATE" || true; fi
+case "$THEME" in
+latte)
+  background='#eff1f5'
+  foreground='#4c4f69'
+  selected='#8839ef'
+  selected_fg='#eff1f5'
+  ;;
+*)
+  background='#1e1e2e'
+  foreground='#cdd6f4'
+  selected='#cba6f7'
+  selected_fg='#1e1e2e'
+  ;;
+esac
+
+if ! command -v dmenu_run >/dev/null 2>&1; then
+  echo 'dmenu_run is missing. Install dmenu (no Rofi required).' >&2
+  exit 127
+fi
+# -c is present in the user's originally shared dmenu binding; it is a patch,
+# not a stock dmenu option. Set I3_THEME_DMENU_CENTER=0 for stock dmenu.
+args=(-i -l 10 -fn 'JetBrainsMono Nerd Font:size=15' -nb "$background" -nf "$foreground" -sb "$selected" -sf "$selected_fg")
+if [[ "${I3_THEME_DMENU_CENTER:-0}" == 1 ]]; then
+  args=(-c "${args[@]}")
+fi
+exec dmenu_run "${args[@]}"

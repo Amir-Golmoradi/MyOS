@@ -1,0 +1,29 @@
+# Nix build outputs
+result
+result-*
+
+# Runtime applications
+v2rayN/
+infra/docker/.env
+infra/docker/.env.*
+!infra/docker/.env.example
+
+# Secrets
+*.key
+*.pem
+*.p12
+*.pfx
+*.age
+*.sops
+secrets/
+
+# Local state
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Editor temporary files
+*.swp
+*.swo
+*~
