@@ -7,6 +7,7 @@
     ./i3.nix
     ./theme.nix
     ./dotfiles.nix
+    ./packages.nix
 ];
   home.username = "amirgm";
   home.homeDirectory = "/home/amirgm";

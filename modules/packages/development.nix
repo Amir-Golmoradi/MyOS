@@ -9,9 +9,14 @@
     
     httpie shfmt
     
-    rustup clang lldb cmake gnumake pkg-config
+   # System Languages
+   rustup clang lldb cmake gnumake pkg-config
     
     nodejs
+
+    # LLM
+    codex
+
     # This is fwcd's Kotlin server, NOT JetBrains' kotlin-lsp-bin.
     kotlin-language-server
     kotlin-native
