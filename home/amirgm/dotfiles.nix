@@ -14,10 +14,17 @@
       ".config/fish/functions/lv.fish".source =
         ./dotfiles/fish/functions/lv.fish;
 
-      # OpenVPN management function
-	"home/amirgm/dotfiles/fish/functions/openvpn.fish".source =
-	./dotfiles/fish/functions/openvpn.fish;
+".config/fish/functions/vpn-on.fish".source =
+  ./dotfiles/fish/functions/vpn-on.fish;
 
+".config/fish/functions/vpn-off.fish".source =
+  ./dotfiles/fish/functions/vpn-off.fish;
+
+".config/fish/functions/vpn-status.fish".source =
+  ./dotfiles/fish/functions/vpn-status.fish;
+
+".config/fish/functions/codex-update.fish".source =
+  ./dotfiles/fish/functions/codex-update.fish;
 
       # NixOS management functions
       ".config/fish/functions/nix-rebuild.fish".source =
