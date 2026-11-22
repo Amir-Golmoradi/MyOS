@@ -1,6 +1,11 @@
 #!/run/current-system/sw/bin/bash
 set -euo pipefail
 [[ -n "${DISPLAY:-}" ]] || exit 0
+
+if [[ -x "$HOME/.fehbg" ]] && "$HOME/.fehbg"; then
+  exit 0
+fi
+
 # Prefer user's own wallpaper if present.  Bundled art is the fallback.
 if [[ "$I3_THEME_NAME" == 'mocha' ]]; then
   IMAGE="$HOME/wallpapers/WLX.jpg"
