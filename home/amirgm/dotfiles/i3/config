@@ -67,19 +67,22 @@ bindsym $mod+e exec --no-startup-id kitty -e elio
 
 # Super alone: fullscreen window overview
 
-# Super + Space: floating application grid
+# Super + Space: Change the keyboard langauge
 
 # Super + D: centered Catppuccin dmenu
 bindsym --release $mod+d exec --no-startup-id ~/.local/bin/i3-theme-dmenu
 
 # Super + T: Throne
-bindsym $mod+t exec --no-startup-id v2rayn
+bindsym $mod+t exec --no-startup-id v2ray
 
 # Super + F: Firefox
 bindsym $mod+f exec --no-startup-id firefox 
 
 # Super + I: IntelliJ IDEA
 bindsym $mod+i exec --no-startup-id /home/amirgm/.local/share/JetBrains/Toolbox/scripts/idea
+
+# Super + Z: Zed IDE
+bindsym #mod+z exec --no-startup-id zeditor
 
 # Super + Shift + B: Blueman Bluetooth Manager
 bindsym $mod+Shift+b exec --no-startup-id blueman-manager

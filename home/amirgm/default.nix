@@ -3,6 +3,7 @@
   imports = [
     ./kitty.nix
     ./git.nix
+    ./zed.nix
     ./neovim.nix
     ./i3.nix
     ./theme.nix
